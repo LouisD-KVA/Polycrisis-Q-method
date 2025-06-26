@@ -49,4 +49,4 @@ your_plot <- ggvenn(
 )
 
 # 7. Save the plot to file
-ggsave("Venn.png", plot = your_plot, dpi = 500, width = 6, height = 4)
+ggsave("Venn_consensus.png", plot = your_plot, dpi = 500, width = 6, height = 4)
