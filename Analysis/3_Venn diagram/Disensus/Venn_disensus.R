@@ -11,10 +11,9 @@ df <- data.frame(
   F4 = c(-3, -2, -4, -2, -1, -2, 1, 0, 3, 3, 1, 0, 3, 4, -3, 2, 1, -4, 1, -2, 2, 4, 2, 0, 0, -1, -1, -1, -3, 2, -1, 0, 1)
 )
 
-# 3. Define disensus function using ±2 threshold
+# 3. Define disensus function using absolute difference ≥ 4
 is_disensus <- function(scores, target_score) {
-  any_opposite_extreme <- any((target_score >= 2 & scores <= -2) | (target_score <= -2 & scores >= 2))
-  return(any_opposite_extreme)
+  any(abs(target_score - scores) >= 4)
 }
 
 # 4. Get disensus IDs for each factor
@@ -24,11 +23,9 @@ get_disensus_set <- function(df, target_col, all_cols) {
   
   for (i in 1:nrow(df)) {
     target_score <- df[[target_col]][i]
-    if (abs(target_score) >= 2) {
-      other_scores <- unlist(df[i, others])
-      if (is_disensus(other_scores, target_score)) {
-        ids <- c(ids, df$ID[i])
-      }
+    other_scores <- unlist(df[i, others])
+    if (is_disensus(other_scores, target_score)) {
+      ids <- c(ids, df$ID[i])
     }
   }
   unique(ids)
@@ -49,4 +46,3 @@ your_plot <- ggvenn(
 
 # 7. Save the plot
 ggsave("Venn_disensus.png", plot = your_plot, dpi = 500, width = 6, height = 4)
-
